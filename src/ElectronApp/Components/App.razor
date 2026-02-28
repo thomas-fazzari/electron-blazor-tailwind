@@ -1,0 +1,28 @@
+@using NetEscapades.AspNetCore.SecurityHeaders
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var nonce = HttpContextAccessor.HttpContext?.GetNonce() ?? "";
+}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <base href="/" />
+        <link href="css/app.build.css" rel="stylesheet" />
+        <link href="ElectronApp.styles.css" rel="stylesheet" />
+        <HeadOutlet @rendermode="InteractiveServer" />
+    </head>
+    <body class="bg-background text-foreground antialiased">
+        <Routes @rendermode="InteractiveServer" />
+        <script src="js/theme.js" nonce="@nonce"></script>
+        <script nonce="@nonce">
+            try {
+                var t = localStorage.getItem("theme");
+                if (t === "dark" || (!t && matchMedia("(prefers-color-scheme: dark)").matches))
+                    document.documentElement.classList.add("dark");
+            } catch {}
+        </script>
+        <script src="_framework/blazor.web.js" nonce="@nonce"></script>
+    </body>
+</html>

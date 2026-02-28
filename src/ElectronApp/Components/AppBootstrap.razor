@@ -1,0 +1,12 @@
+@using ElectronApp.Features.Desktop
+@using ElectronApp.Features.Settings.State
+@inject IDispatcher Dispatcher
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        Dispatcher.Dispatch(new InitializeDesktopAction());
+        Dispatcher.Dispatch(new LoadSettingsAction());
+    }
+}

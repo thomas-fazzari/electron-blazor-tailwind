@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <PackageReference Include="ElectronNET.API" />
+    <PackageReference Include="Blazicons" />
+    <PackageReference Include="Blazicons.Lucide" />
+    <PackageReference Include="Fluxor.Blazor.Web" />
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="electron.manifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Target
+    Name="BuildTailwindCss"
+    BeforeTargets="Build"
+    Condition="'$(SkipTailwindBuild)' != 'true'"
+  >
+    <Exec
+      Command="bunx @tailwindcss/cli -i wwwroot/css/app.css -o wwwroot/css/app.build.css --minify"
+      WorkingDirectory="$(MSBuildProjectDirectory)"
+    />
+  </Target>
+</Project>

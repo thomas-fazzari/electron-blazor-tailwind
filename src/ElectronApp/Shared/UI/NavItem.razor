@@ -1,0 +1,17 @@
+<NavLink
+    class="nav-item flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+    href="@Href"
+    Match="@Match"
+    @attributes="AdditionalAttributes">
+    @ChildContent
+</NavLink>
+
+@code
+{
+    [Parameter, EditorRequired] public string Href { get; set; } = null!;
+    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter] public NavLinkMatch Match { get; set; } = NavLinkMatch.Prefix;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

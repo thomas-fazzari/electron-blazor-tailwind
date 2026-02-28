@@ -1,0 +1,16 @@
+<button type="button"
+        @onclick="OnClick"
+        class="inline-flex h-7 items-center justify-center whitespace-nowrap rounded-md px-3 text-xs font-medium transition-all @(IsActive ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")"
+        @attributes="AdditionalAttributes">
+    @ChildContent
+</button>
+
+@code
+{
+    [Parameter] [EditorRequired] public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter] public bool IsActive { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

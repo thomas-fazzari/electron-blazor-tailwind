@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ElectronApp/ElectronApp.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ElectronApp.UnitTests/ElectronApp.UnitTests.csproj" />
+    <Project Path="tests/ElectronApp.ComponentTests/ElectronApp.ComponentTests.csproj" />
+    <Project Path="tests/ElectronApp.IntegrationTests/ElectronApp.IntegrationTests.csproj" />
+  </Folder>
+</Solution>

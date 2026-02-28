@@ -1,0 +1,56 @@
+@page "/settings"
+@using ElectronApp.Features.Settings.Store
+@using ElectronApp.Features.Settings.State
+@using ElectronApp.Features.Desktop
+@inherits FluxorComponent
+@inject IState<SettingsState> SettingsState
+@inject IState<DesktopState> DesktopState
+@inject IDispatcher Dispatcher
+
+<PageTitle>Settings</PageTitle>
+
+<h1 class="text-2xl font-bold tracking-tight">Settings</h1>
+
+<div class="mt-6 max-w-xl rounded-md border border-border p-5">
+    <label class="mb-3 block text-sm font-medium">Theme</label>
+
+    <div class="inline-flex h-8 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground @(SettingsState.Value.IsLoading ? "pointer-events-none opacity-50" : "")">
+        @foreach (var theme in Enum.GetValues<AppTheme>())
+        {
+            <TabButton IsActive="SettingsState.Value.Settings.Theme == theme"
+                       OnClick="() => SetTheme(theme)">@theme.ToString()
+            </TabButton>
+        }
+    </div>
+    @if (SettingsState.Value.IsSaving)
+    {
+        <p class="mt-3 text-xs text-muted-foreground animate-pulse">Saving...</p>
+    }
+    else if (!string.IsNullOrWhiteSpace(SettingsState.Value.ErrorMessage))
+    {
+        <p class="mt-3 text-xs text-destructive">@SettingsState.Value.ErrorMessage</p>
+    }
+</div>
+
+<div class="mt-4 max-w-xl rounded-md border border-border p-5">
+    <h2 class="mb-3 text-sm font-medium">Runtime</h2>
+    <dl class="grid grid-cols-[auto_1fr] gap-x-8 gap-y-2 text-xs">
+        <dt class="text-muted-foreground">Electron</dt>
+        <dd class="font-mono">@(DesktopState.Value.IsElectronActive ? "Active" : "Inactive")</dd>
+        <dt class="text-muted-foreground">Platform</dt>
+        <dd class="font-mono">@DesktopState.Value.Platform</dd>
+        <dt class="text-muted-foreground">.NET</dt>
+        <dd class="font-mono">@DesktopState.Value.DotnetVersion</dd>
+    </dl>
+</div>
+
+@code
+{
+    private void SetTheme(AppTheme theme)
+    {
+        if (SettingsState.Value.Settings.Theme == theme)
+            return;
+
+        Dispatcher.Dispatch(new SetThemeAction(theme));
+    }
+}

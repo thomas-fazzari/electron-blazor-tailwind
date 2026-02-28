@@ -1,0 +1,104 @@
+@using ElectronApp.Features.Settings.Store
+@using ElectronApp.Features.Settings.State
+@implements IAsyncDisposable
+@inject IState<SettingsState> SettingsState
+@inject IJSRuntime JS
+
+@code
+{
+    private AppTheme? _appliedTheme;
+    private bool _jsReady;
+    private DotNetObjectReference<ThemeManager>? _dotnetRef;
+    private IJSObjectReference? _systemThemeListener;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        _jsReady = true;
+        SettingsState.StateChanged += OnStateChanged;
+        _ = InvokeAsync(async () =>
+        {
+            try
+            {
+                await InitializeAsync();
+            }
+            catch (Exception ex) when (ex is JSDisconnectedException or ObjectDisposedException)
+            {
+            }
+        });
+    }
+
+    private async Task InitializeAsync()
+    {
+        _dotnetRef = DotNetObjectReference.Create(this);
+        _systemThemeListener = await JS.InvokeAsync<IJSObjectReference>(
+            "themeInterop.onSystemThemeChange",
+            _dotnetRef
+        );
+
+        await ApplyThemeAsync();
+    }
+
+    [JSInvokable]
+    public async Task OnSystemThemeChanged(bool isDark)
+    {
+        if (SettingsState.Value.Settings.Theme != AppTheme.System)
+            return;
+
+        _appliedTheme = AppTheme.System;
+        await JS.InvokeVoidAsync("themeInterop.apply", isDark);
+    }
+
+    private async void OnStateChanged(object? sender, EventArgs e)
+    {
+        try
+        {
+            await InvokeAsync(ApplyThemeAsync);
+        }
+        catch (Exception ex) when (ex is ObjectDisposedException or JSDisconnectedException)
+        {
+        }
+    }
+
+    private async Task ApplyThemeAsync()
+    {
+        if (!_jsReady)
+            return;
+
+        var theme = SettingsState.Value.Settings.Theme;
+
+        if (theme == _appliedTheme)
+            return;
+
+        _appliedTheme = theme;
+
+        var isDark = theme switch
+        {
+            AppTheme.Dark => true,
+            AppTheme.Light => false,
+            _ => await JS.InvokeAsync<bool>("themeInterop.prefersColorSchemeDark")
+        };
+
+        await JS.InvokeVoidAsync("themeInterop.apply", isDark);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        SettingsState.StateChanged -= OnStateChanged;
+
+        try
+        {
+            if (_systemThemeListener is not null)
+                await _systemThemeListener.InvokeVoidAsync("dispose");
+        }
+        catch (JSDisconnectedException)
+        {
+        }
+
+        _systemThemeListener = null;
+        _dotnetRef?.Dispose();
+    }
+
+}
