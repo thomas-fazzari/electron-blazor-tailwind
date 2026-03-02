@@ -1,43 +1,53 @@
 @inherits FluxorLayout
+@using System.Runtime.InteropServices
 @using Fluxor.Blazor.Web
 
 <StoreInitializer/>
 <AppBootstrap/>
 <ThemeManager/>
-<div class="flex h-screen w-screen overflow-hidden">
-    <aside class="flex w-56 flex-col border-r border-border bg-background p-3">
-        <div class="app-drag-region mb-4 flex items-center gap-2 px-2 pt-1">
-            <span class="font-mono text-sm font-semibold tracking-tight">ElectronApp</span>
-        </div>
-        <nav class="flex flex-col gap-1">
-            <NavItem Href="" Match="NavLinkMatch.All">
-                <Blazicon Svg="Lucide.House" class="size-4"/> Home
-            </NavItem>
-            <NavItem Href="settings">
-                <Blazicon Svg="Lucide.Settings" class="size-4"/> Settings
-            </NavItem>
-        </nav>
-    </aside>
+<div class="flex h-screen w-screen flex-col overflow-hidden">
+    @if (IsMacOS)
+    {
+        <div class="app-drag-region h-9 w-full shrink-0 border-b border-border"></div>
+    }
+    else
+    {
+        <TitleBar/>
+    }
+    <div class="flex min-h-0 flex-1">
+        <aside class="flex w-56 flex-col border-r border-border bg-background px-3 pb-3 pt-2">
+            <nav class="flex flex-col gap-1">
+                <NavItem Href="" Match="NavLinkMatch.All">
+                    <Blazicon Svg="Lucide.House" class="size-4"/> Home
+                </NavItem>
+                <NavItem Href="settings">
+                    <Blazicon Svg="Lucide.Settings" class="size-4"/> Settings
+                </NavItem>
+            </nav>
+        </aside>
 
-    <main class="min-w-0 flex-1 overflow-y-auto bg-background p-6">
-        <ErrorBoundary @ref="_errorBoundary">
-            <ChildContent>
-                @Body
-            </ChildContent>
-            <ErrorContent>
-                <div class="flex flex-col items-center justify-center gap-4 p-12 text-center">
-                    <Blazicon Svg="Lucide.TriangleAlert" class="size-8 text-destructive"/>
-                    <p class="text-sm text-muted-foreground">Something went wrong.</p>
-                    <Button OnClick="Recover">Try again</Button>
-                </div>
-            </ErrorContent>
-        </ErrorBoundary>
-    </main>
+        <main class="min-w-0 flex-1 overflow-y-auto bg-background p-6">
+            <ErrorBoundary @ref="_errorBoundary">
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent>
+                    <div class="flex flex-col items-center justify-center gap-4 p-12 text-center">
+                        <Blazicon Svg="Lucide.TriangleAlert" class="size-8 text-destructive"/>
+                        <p class="text-sm text-muted-foreground">Something went wrong.</p>
+                        <Button OnClick="Recover">Try again</Button>
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>
+        </main>
+    </div>
 </div>
 
 @code
 {
     private ErrorBoundary? _errorBoundary;
+
+    private static bool IsMacOS => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 
     private void Recover() => _errorBoundary?.Recover();
 }

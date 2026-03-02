@@ -8,13 +8,17 @@ run:
 	cd src/ElectronApp && electronize start
 
 run-web:
-	dotnet run --project src/ElectronApp
+	dotnet watch --project src/ElectronApp
 
 test:
 	dotnet test
 
 format:
-	dotnet csharpier .
+	dotnet csharpier format .
 
 check:
-	dotnet csharpier --check .
+	dotnet csharpier check .
+
+outdated:
+	dotnet dotnet-outdated
+	cd src/ElectronApp && bun outdated

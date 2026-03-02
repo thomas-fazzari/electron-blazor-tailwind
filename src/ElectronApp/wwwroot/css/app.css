@@ -61,8 +61,8 @@
   --accent-foreground: #000000;
   --destructive: #ee0000;
   --destructive-foreground: #ffffff;
-  --border: #eaeaea;
-  --input: #eaeaea;
+  --border: #f0f0f0;
+  --input: #f0f0f0;
   --ring: #000000;
   --link: #0070f3;
   --radius: 0.375rem;
@@ -70,24 +70,24 @@
 
 /* Dark theme */
 .dark {
-  --background: #000000;
-  --foreground: #ededed;
-  --card: #111111;
-  --card-foreground: #ededed;
-  --primary: #ededed;
-  --primary-foreground: #000000;
-  --secondary: #1a1a1a;
-  --secondary-foreground: #ededed;
-  --muted: #1a1a1a;
-  --muted-foreground: #888888;
-  --accent: #1a1a1a;
-  --accent-foreground: #ededed;
-  --destructive: #ee0000;
+  --background: #0a0a0a;
+  --foreground: #f0f0f0;
+  --card: #141414;
+  --card-foreground: #f0f0f0;
+  --primary: #f0f0f0;
+  --primary-foreground: #0a0a0a;
+  --secondary: #1e1e1e;
+  --secondary-foreground: #f0f0f0;
+  --muted: #1e1e1e;
+  --muted-foreground: #999999;
+  --accent: #1e1e1e;
+  --accent-foreground: #f0f0f0;
+  --destructive: #f43f5e;
   --destructive-foreground: #ffffff;
-  --border: #333333;
-  --input: #333333;
-  --ring: #ededed;
-  --link: #3291ff;
+  --border: #2a2a2a;
+  --input: #2a2a2a;
+  --ring: #f0f0f0;
+  --link: #3b9eff;
 }
 
 /* Base layer */
@@ -116,12 +116,6 @@
     user-select: text;
   }
 
-  /* Prevent image/svg drag */
-  img,
-  svg {
-    pointer-events: none;
-  }
-
   /* Remove Chromium focus outline */
   :focus-visible {
     outline: none;
@@ -134,8 +128,44 @@
     -webkit-app-region: drag;
   }
 
-  .app-drag-region * {
+  .app-drag-region button,
+  .app-drag-region a,
+  .app-drag-region input,
+  .app-drag-region [role="button"],
+  .app-drag-region :is(button, a, [role="button"]) * {
     -webkit-app-region: no-drag;
+  }
+
+  /* Custom titlebar window controls */
+  .titlebar-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.875rem;
+    height: 100%;
+    color: var(--muted-foreground);
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+  .titlebar-button:hover {
+    background-color: var(--accent);
+    color: var(--foreground);
+  }
+  .titlebar-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.875rem;
+    height: 100%;
+    color: var(--muted-foreground);
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+  .titlebar-close:hover {
+    background-color: #e81123;
+    color: #ffffff;
   }
 }
 
@@ -143,4 +173,12 @@
 .nav-item.active {
   background-color: var(--accent);
   color: var(--foreground);
+}
+
+/* No transition during theme switch */
+.no-transitions,
+.no-transitions *,
+.no-transitions *::before,
+.no-transitions *::after {
+  transition-duration: 0s !important;
 }

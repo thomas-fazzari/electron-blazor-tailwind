@@ -92,7 +92,10 @@ public sealed partial class JsonAppSettingsStore(
         {
             File.Delete(path);
         }
-        catch { }
+        catch
+        {
+            // ignored
+        }
     }
 
     private void BackupCorruptedSettingsFile()
