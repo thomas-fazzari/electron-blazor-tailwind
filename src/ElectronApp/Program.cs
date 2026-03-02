@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using ElectronApp.Features.Desktop;
 using ElectronApp.Features.Settings;
 using ElectronApp.Features.Settings.Store;
@@ -141,9 +142,19 @@ else
     windowOptions.Center = true;
 }
 
+// Custom titlebar OS detection
+windowOptions.TitleBarStyle = RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+    ? TitleBarStyle.hiddenInset
+    : TitleBarStyle.hidden;
+windowOptions.Fullscreenable = true;
+
 mainWindow = await Electron.WindowManager.CreateWindowAsync(windowOptions);
 
 mainWindow.OnReadyToShow += () => mainWindow.Show();
+
+// Register window maximize/unmaximize events for titlebar icon
+var desktopBridge = (ElectronDesktopBridge)app.Services.GetRequiredService<IDesktopBridge>();
+desktopBridge.RegisterWindowEvents();
 
 // Persist window bounds to disk
 CancellationTokenSource? boundsDebounce = null;

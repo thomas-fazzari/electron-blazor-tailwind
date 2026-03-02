@@ -11,7 +11,7 @@
 </p>
 
 <div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
-    <div class="rounded-md border border-border p-4 transition-colors hover:border-foreground/20">
+    <div class="rounded-md border border-border p-4 transition-colors hover:bg-accent">
         <div class="flex items-center gap-2">
             <Blazicon Svg="Lucide.Monitor" class="size-4 text-muted-foreground"/>
             <span class="font-mono text-sm font-medium">Electron.NET</span>
@@ -20,7 +20,7 @@
             Cross-platform desktop shell with secure window management and single-instance support
         </p>
     </div>
-    <div class="rounded-md border border-border p-4 transition-colors hover:border-foreground/20">
+    <div class="rounded-md border border-border p-4 transition-colors hover:bg-accent">
         <div class="flex items-center gap-2">
             <Blazicon Svg="Lucide.Component" class="size-4 text-muted-foreground"/>
             <span class="font-mono text-sm font-medium">Blazor</span>
@@ -29,7 +29,7 @@
             Interactive UI with Fluxor state management, vertical slice architecture, and component testing
         </p>
     </div>
-    <div class="rounded-md border border-border p-4 transition-colors hover:border-foreground/20">
+    <div class="rounded-md border border-border p-4 transition-colors hover:bg-accent">
         <div class="flex items-center gap-2">
             <Blazicon Svg="Lucide.Paintbrush" class="size-4 text-muted-foreground"/>
             <span class="font-mono text-sm font-medium">Tailwind CSS</span>
@@ -44,13 +44,13 @@
 <div class="mt-3 flex gap-3">
     <button type="button"
             @onclick="@(() => ExternalLinkService.TryOpenAsync(GithubUrl, _cts.Token))"
-            class="cursor-pointer flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-foreground/20 hover:text-foreground">
+            class="cursor-pointer flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
         <Blazicon Svg="Lucide.Github" class="size-4"/>
         Author
     </button>
     <button type="button"
             @onclick="@(() => ExternalLinkService.TryOpenAsync(ElectronNetUrl, _cts.Token))"
-            class="cursor-pointer flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:border-foreground/20 hover:text-foreground">
+            class="cursor-pointer flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
         <Blazicon Svg="Lucide.ExternalLink" class="size-4"/>
         Electron.NET
     </button>

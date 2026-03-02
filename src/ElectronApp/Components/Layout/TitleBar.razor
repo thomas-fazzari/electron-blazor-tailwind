@@ -1,0 +1,45 @@
+@implements IDisposable
+@inject Features.Desktop.IDesktopBridge DesktopBridge
+
+<div class="app-drag-region flex h-9 shrink-0 items-center border-b border-border bg-background">
+    <div class="ml-auto flex h-full">
+        <button type="button" @onclick="Minimize" class="titlebar-button">
+            <Blazicon Svg="Lucide.Minus" class="size-3.5"/>
+        </button>
+        <button type="button" @onclick="MaximizeOrRestore" class="titlebar-button">
+            <Blazicon Svg="@(_isMaximized ? Lucide.Copy : Lucide.Square)" class="size-3.5"/>
+        </button>
+        <button type="button" @onclick="Close" class="titlebar-close">
+            <Blazicon Svg="Lucide.X" class="size-3.5"/>
+        </button>
+    </div>
+</div>
+
+@code
+{
+    private readonly CancellationTokenSource _cts = new();
+    private bool _isMaximized;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isMaximized = await DesktopBridge.IsMaximizedAsync(_cts.Token);
+        DesktopBridge.MaximizedChanged += OnMaximizedChanged;
+    }
+
+    private void OnMaximizedChanged(bool isMaximized)
+    {
+        _isMaximized = isMaximized;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private Task Minimize() => DesktopBridge.MinimizeWindowAsync(_cts.Token);
+    private Task MaximizeOrRestore() => DesktopBridge.MaximizeOrRestoreWindowAsync(_cts.Token);
+    private Task Close() => DesktopBridge.CloseWindowAsync(_cts.Token);
+
+    public void Dispose()
+    {
+        DesktopBridge.MaximizedChanged -= OnMaximizedChanged;
+        _cts.Cancel();
+        _cts.Dispose();
+    }
+}

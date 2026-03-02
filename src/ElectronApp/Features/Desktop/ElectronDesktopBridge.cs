@@ -33,6 +33,65 @@ public sealed partial class ElectronDesktopBridge(ILogger<ElectronDesktopBridge>
         return true;
     }
 
+    public Task MinimizeWindowAsync(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (!HybridSupport.IsElectronActive)
+            return Task.CompletedTask;
+
+        Electron.WindowManager.BrowserWindows.First().Minimize();
+        return Task.CompletedTask;
+    }
+
+    public async Task MaximizeOrRestoreWindowAsync(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (!HybridSupport.IsElectronActive)
+            return;
+
+        var window = Electron.WindowManager.BrowserWindows.First();
+
+        if (await window.IsMaximizedAsync())
+            window.Unmaximize();
+        else
+            window.Maximize();
+    }
+
+    public Task CloseWindowAsync(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (!HybridSupport.IsElectronActive)
+            return Task.CompletedTask;
+
+        Electron.WindowManager.BrowserWindows.First().Close();
+        return Task.CompletedTask;
+    }
+
+    public async Task<bool> IsMaximizedAsync(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (!HybridSupport.IsElectronActive)
+            return false;
+
+        return await Electron.WindowManager.BrowserWindows.First().IsMaximizedAsync();
+    }
+
+    public event Action<bool>? MaximizedChanged;
+
+    public void RegisterWindowEvents()
+    {
+        if (!HybridSupport.IsElectronActive)
+            return;
+
+        var window = Electron.WindowManager.BrowserWindows.First();
+        window.OnMaximize += () => MaximizedChanged?.Invoke(true);
+        window.OnUnmaximize += () => MaximizedChanged?.Invoke(false);
+    }
+
     [LoggerMessage(
         Level = LogLevel.Warning,
         Message = "Blocked external open because Electron runtime is inactive: {Uri}"
