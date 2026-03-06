@@ -17,6 +17,7 @@ public static class DesktopServiceExtensions
             DesktopBootstrapOptionsValidator
         >();
         services.AddSingleton<IDesktopBridge, ElectronDesktopBridge>();
+        services.AddSingleton<IWindowBoundsCoordinator, WindowBoundsCoordinator>();
 
         return services;
     }

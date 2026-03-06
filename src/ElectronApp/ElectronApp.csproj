@@ -5,6 +5,8 @@
     <PackageReference Include="Blazicons.Lucide" />
     <PackageReference Include="Fluxor.Blazor.Web" />
     <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" />
+    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Serilog.Sinks.File" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="electron.manifest.json">
