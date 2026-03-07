@@ -18,7 +18,8 @@ make install
 make run
 
 # Start as a regular web app
-make run-web
+make web-http
+make web-https
 ```
 
 ## Build & Test
