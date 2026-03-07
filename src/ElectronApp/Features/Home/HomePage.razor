@@ -1,6 +1,4 @@
 @page "/"
-@implements IDisposable
-@inject Security.IExternalLinkService ExternalLinkService
 
 <PageTitle>Home</PageTitle>
 
@@ -42,26 +40,20 @@
 
 <h2 class="mt-8 text-sm font-semibold">Resources</h2>
 <div class="mt-3 flex gap-3">
-    <button type="button"
-            @onclick="@(() => ExternalLinkService.TryOpenAsync(GithubUrl, _cts.Token))"
-            class="cursor-pointer flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+    <ExternalLink Href="@GithubUrl"
+                  Class="cursor-pointer flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
         <Blazicon Svg="Lucide.Github" class="size-4"/>
         Author
-    </button>
-    <button type="button"
-            @onclick="@(() => ExternalLinkService.TryOpenAsync(ElectronNetUrl, _cts.Token))"
-            class="cursor-pointer flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+    </ExternalLink>
+    <ExternalLink Href="@ElectronNetUrl"
+                  Class="cursor-pointer flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
         <Blazicon Svg="Lucide.ExternalLink" class="size-4"/>
         Electron.NET
-    </button>
+    </ExternalLink>
 </div>
 
 @code
 {
     private const string GithubUrl = "https://github.com/thomas-fazzari";
     private const string ElectronNetUrl = "https://github.com/ElectronNET/Electron.NET";
-
-    private readonly CancellationTokenSource _cts = new();
-
-    public void Dispose() { _cts.Cancel(); _cts.Dispose(); }
 }

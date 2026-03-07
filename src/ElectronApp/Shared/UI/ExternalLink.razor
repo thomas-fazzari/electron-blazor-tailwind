@@ -1,0 +1,42 @@
+@implements IDisposable
+@inject Security.IExternalLinkService ExternalLinkService
+
+@if (_isElectron)
+{
+    <button type="button"
+            @onclick="OnClickAsync"
+            class="@Class"
+            @attributes="AdditionalAttributes">
+        @ChildContent
+    </button>
+}
+else
+{
+    <a href="@Href" target="_blank" rel="noopener noreferrer"
+       class="@Class"
+       @attributes="AdditionalAttributes">
+        @ChildContent
+    </a>
+}
+
+@code
+{
+    [Parameter, EditorRequired] public string Href { get; set; } = null!;
+    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter] public string? Class { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private readonly CancellationTokenSource _cts = new();
+    private bool _isElectron;
+
+    protected override void OnInitialized()
+    {
+        _isElectron = ElectronNET.API.HybridSupport.IsElectronActive;
+    }
+
+    private Task OnClickAsync() => ExternalLinkService.TryOpenAsync(Href, _cts.Token);
+
+    public void Dispose() { _cts.Cancel(); _cts.Dispose(); }
+}

@@ -20,6 +20,7 @@ internal static class LoggingServiceExtensions
 
         return host.UseSerilog(
             (context, _, config) =>
+            {
                 config
                     .ReadFrom.Configuration(context.Configuration)
                     .Enrich.FromLogContext()
@@ -31,7 +32,16 @@ internal static class LoggingServiceExtensions
                         retainedFileCountLimit: 7,
                         formatProvider: CultureInfo.InvariantCulture,
                         outputTemplate: OutputTemplate
-                    )
+                    );
+
+                if (context.HostingEnvironment.IsDevelopment())
+                {
+                    config.WriteTo.Console(
+                        formatProvider: CultureInfo.InvariantCulture,
+                        outputTemplate: OutputTemplate
+                    );
+                }
+            }
         );
     }
 }

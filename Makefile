@@ -7,8 +7,11 @@ build:
 run:
 	cd src/ElectronApp && electronize start
 
-run-web:
-	dotnet watch --project src/ElectronApp
+web-http:
+	dotnet watch --project src/ElectronApp --launch-profile http
+
+web-https:
+	dotnet watch --project src/ElectronApp --launch-profile https
 
 test:
 	dotnet test
